@@ -24,28 +24,40 @@ class TrackerGUI(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (MainMenu, PageOne, PageTwo):
+        for F in (MainMenuPage, AddItemsPage, ViewItemsPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky='nsew')
-        self.show_frame(MainMenu)
+        self.show_frame(MainMenuPage)
 
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
 
 
-class MainMenu(tk.Frame):
+class TemplatePage:
+    """Template class for widgets that all Page class objects will have
+    
+    Widgets include:
+        Title Label (tkinter.Label)
+        Return Button (tkinter.Button)
+    """
+    def __init__(self):
+        pass
+
+
+class MainMenuPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self,parent)
-        label = tk.Label(self, text='PyTracker', font=TITLE_FONT)
-        label.pack(pady=10,padx=10)
-
+        title_lbl = tk.Label(self, text='PyTracker', font=TITLE_FONT)
+        title_lbl.pack()
         buttons = [
-                    tk.Button(self, text='Visit Page 1', font=DEFAULT_BTN_FONT,
-                        command=lambda: controller.show_frame(PageOne)),
-                    tk.Button(self, text='Visit Page 2', font=DEFAULT_BTN_FONT,
-                        command=lambda: controller.show_frame(PageTwo))
+                    tk.Button(self, text='Add/Track Item', font=DEFAULT_BTN_FONT,
+                        command=lambda: controller.show_frame(AddItemsPage)),
+                    tk.Button(self, text='View Tracked Items', font=DEFAULT_BTN_FONT,
+                        command=lambda: controller.show_frame(ViewItemsPage)),
+                    tk.Button(self, text='Quit Program', font=DEFAULT_BTN_FONT,
+                        command=lambda: controller.destroy()),
                   ]
         # Customizing button look and layout
         for btn in buttons:
@@ -55,31 +67,36 @@ class MainMenu(tk.Frame):
             btn.pack(pady=5)
 
 
-
-class PageOne(tk.Frame):
+class AddItemsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text='Page One!!!', font=TITLE_FONT)
-        label.pack(pady=10,padx=10)
-        button1 = tk.Button(self, text='Return', font=DEFAULT_BTN_FONT,
-                            command=lambda: controller.show_frame(MainMenu))
-        button1.pack()
-        button2 = tk.Button(self, text='Page Two', font=DEFAULT_BTN_FONT,
-                            command=lambda: controller.show_frame(PageTwo))
-        button2.pack()
+        title_lbl = tk.Label(self, text='Page One!!!', font=TITLE_FONT)
+        title_lbl.grid(row=0, column=0, pady=10,padx=10)
+        buttons = [
+                    tk.Button(self, text='Submit', font=DEFAULT_BTN_FONT,
+                        command=lambda: print('Submitting')),
+                    tk.Button(self, text='Return to Main Menu',
+                        font=DEFAULT_BTN_FONT,
+                        command=lambda: controller.show_frame(MainMenuPage))
+                  ]
+        for btn in buttons:
+            btn.grid(pady=5)
 
 
-class PageTwo(tk.Frame):
+class ViewItemsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text='Page Two!!!', font=TITLE_FONT)
-        label.pack(pady=10,padx=10)
-        button1 = tk.Button(self, text='Return', font=DEFAULT_BTN_FONT,
-                            command=lambda: controller.show_frame(MainMenu))
-        button1.pack()
-        button2 = tk.Button(self, text='Page One', font=DEFAULT_BTN_FONT,
-                            command=lambda: controller.show_frame(PageOne))
-        button2.pack()
+        title_lbl = tk.Label(self, text='Tracked Items', font=TITLE_FONT)
+        title_lbl.grid(row=0, column=0)
+        buttons = [
+                    tk.Button(self, text='Submit', font=DEFAULT_BTN_FONT,
+                        command=lambda: print('Submitting')),
+                    tk.Button(self, text='Return to Main Menu',
+                        font=DEFAULT_BTN_FONT,
+                        command=lambda: controller.show_frame(MainMenuPage))
+                  ]
+        for btn in buttons:
+            btn.grid(pady=5)
 
 
 window = TrackerGUI()
